@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Formulario HTML a PDF</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        /* Cambiar la fuente a Arial o una fuente sans-serif */
+      }
+    </style>
+  </head>
+  <body>
+    {% csrf_token %}
+    <table border="1" style="border-collapse: collapse; width: 100%; height: 69px;">
+      <tbody>
+        <tr style="height: 63px;">
+          <td style="width: 64.8672%; height: 63px; text-align: center;">inserte nombre de la entidad aqui</td>
+          <td style="width: 35.1328%; text-align: center; height: 69px;" rowspan="2">
+            <b>HOJA DE RECLAMACION EN SALUD</b><br /><br />inserte codigo aqui
+          </td>
+        </tr>
+        <tr style="height: 6px;">
+          <td style="width: 64.8672%; height: 6px;">
+            <p></p>
+            <p id="fecha-hora" name="fecha-hora" style="text-align: center;"></p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+      <tbody>
+        <tr>
+          <td style="width: 100%;">
+            <div class="panel-heading">
+              <div class="panel-title">
+                <b>1. IDENTIFICACIÓN DEL USUARIO O TERCERO LEGITIMADO</b>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table border="1" style="border-collapse: collapse; width: 100%; height: 72px;">
+      <tbody>
+        <tr style="height: 36px;">
+          <td style="width: 25%; height: 36px;">
+            <strong>NOMBRE O RAZÓN SOCIAL:</strong>
+          </td>
+          <td style="width: 25%; height: 36px;">{{ nombres_usuario }} {{ apellido_paterno_usuario }} {{ apellido_materno_usuario }}</td>
+          <td style="width: 23.2301%; height: 36px;">
+            <strong>EMAIL:</strong>
+          </td>
+          <td style="width: 26.7699%; height: 36px;">{{ correo_usuario }}</td>
+        </tr>
+        <tr style="height: 18px;">
+          <td style="width: 25%; height: 18px;">
+            <strong>DOMICILIO:</strong>
+          </td>
+          <td style="width: 25%; height: 18px;">{{ direccion_usuario }}</td>
+          <td style="width: 23.2301%; height: 18px;">
+            <strong>TELÉFONO:</strong>
+          </td>
+          <td style="width: 26.7699%; height: 18px;">{{ telefono_usuario }}</td>
+        </tr>
+        <tr style="height: 18px;">
+          <td style="width: 25%; height: 18px;">
+            <strong>DOCUMENTO DE IDENTIDAD:</strong>
+          </td>
+          <td style="width: 25%; height: 18px;">{{ tipo_documento_usuario }}</td>
+          <td style="width: 23.2301%; height: 18px;">
+            <strong>NÚMERO DE DOCUMENTO:</strong>
+          </td>
+          <td style="width: 26.7699%; height: 18px;">{{ numero_documento_usuario }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+      <tbody>
+        <tr>
+          <td style="width: 100%;">
+            <div class="panel-heading">
+              <div class="panel-title">
+                <b>2. IDENTIFICACION DE QUIEN PRESENTA EL RECLAMO (En caso de ser el usuario afectado no es necesario su llenado)</b>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table border="1" style="border-collapse: collapse; width: 100%; height: 72px;">
+      <tbody>
+        <tr style="height: 36px;">
+          <td style="width: 25%; height: 36px;">
+            <strong>NOMBRE O RAZÓN SOCIAL:</strong>
+          </td>
+          <td style="width: 25%; height: 36px;">{{ nombres_presenta }} {{ apellido_paterno_presenta }} {{ apellido_materno_presenta }}</td>
+          <td style="width: 23.2301%; height: 36px;">
+            <strong>EMAIL:</strong>
+          </td>
+          <td style="width: 26.7699%; height: 36px;">{{ correo_presenta }}</td>
+        </tr>
+        <tr style="height: 18px;">
+          <td style="width: 25%; height: 18px;">
+            <strong>DOMICILIO:</strong>
+          </td>
+          <td style="width: 25%; height: 18px;">{{ domicilio_presenta }}</td>
+          <td style="width: 23.2301%; height: 18px;">
+            <strong>TELÉFONO:</strong>
+          </td>
+          <td style="width: 26.7699%; height: 18px;">{{ celular_presenta }}</td>
+        </tr>
+        <tr style="height: 18px;">
+          <td style="width: 25%; height: 18px;">
+            <strong>DOCUMENTO DE IDENTIDAD:</strong>
+          </td>
+          <td style="width: 25%; height: 18px;">{{ tipo_documento_presenta }}</td>
+          <td style="width: 23.2301%; height: 18px;">
+            <strong>NÚMERO DE DOCUMENTO:</strong>
+          </td>
+          <td style="width: 26.7699%; height: 18px;">{{ numero_documento_presenta }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+    <table border="1" style="border-collapse: collapse; width: 100%; height: 36px;">
+      <tbody>
+        <tr style="height: 18px;">
+          <td style="width: 100%; height: 18px;">
+            <b>3. DETALLE DEL RECLAMO</b>
+          </td>
+        </tr>
+        <tr style="height: 18px;">
+          <td style="width: 100%; height: 45px;">{{ detalle_reclamo }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+    <table border="1" style="border-collapse: collapse; width: 100%; height: 36px;">
+      <tbody>
+        <tr style="height: 18px;">
+          <td style="width: 100%; height: 18px;">
+            <b>4. AUTORIZACIÓN DE NOTIFICACIÓN DEL RESULTADO DEL RECLAMO</b>
+          </td>
+        </tr>
+        <tr style="height: 18px;">
+          <td style="width: 100%; height: 18px;">{{ autorizacion_notificacion_correo }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <footer>
+      <p id="piepagina1" align="center">
+        <b>Las IAFAS, IPRESS o UGIPRESS deben atender el reclamo en un plazo de 30 días hábiles.</b>
+      </p>
+      <p id="piepagina2" align="center">"Estimado Usuario: Usted puede presentar su denuncia ante SUSALUD ante hechos o actos que vulneren o pudieran vulnerar el derecho a la salud, o cuando no le hayan brindado un servicio, prestación o coberturas solicitadas o recibidas de las IAFAS O IPRESS o que dependen de las UGIPRESS pública, privada o mixtas, también ante la negativa de atención de su reclamo, irregularidad en su tramitación o disconformidad con el resultado del mismo o hacer uso de los mecanismos alternativos de solución de controversias ante el Centro de Conciliación y Arbitraje - CECONAR de SUSALUD".</p>
+    </footer>
+
+    <script>
+      // Obtener el elemento donde mostraremos la fecha y hora
+      var fechaHoraElemento = document.getElementById('fecha-hora')
+      
+      // Función para obtener la fecha y hora actual
+      function obtenerFechaHoraActual() {
+        var fechaHora = new Date()
+        //var opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric'  };
+        fechaHoraElemento.textContent = fechaHora.toLocaleString('es')
+      }
+      
+      // Llamar a la función al cargar la página
+      obtenerFechaHoraActual()
+      
+      // Actualizar la fecha y hora cada segundo (opcional)
+      setInterval(obtenerFechaHoraActual, 1000)
+    </script>
+  </body>
+</html>

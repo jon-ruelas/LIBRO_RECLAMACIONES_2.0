@@ -1,0 +1,59 @@
+.panel-body {
+    background:#dfdbdb;
+     
+ }
+
+.panel-heading{
+    background:#033f77;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    
+     
+        width: 800;
+     
+}
+
+.panel-title{
+    color:white;
+}
+
+.panel {
+        margin-bottom: 20px;
+        margin-left: 100px;
+        margin-right:100px;
+
+        background-color: #dfdbdb;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+         width: 800;
+         border-color: black;
+}
+
+.h1{
+    font-size: xx-large;
+ }
+
+ 
+ body{
+    background: rgb(2,0,36);
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(222,221,230,0.1741946778711485) 0%, rgba(100,207,228,0.5579481792717087) 100%);
+ }
+
+
+
+ #piepagina1{
+     
+        margin: 35px 70px 0px 90px;
+        font-size: 10px;
+       
+ }
+
+ 
+ #piepagina2{
+     
+    margin: 10px 98px 0px 98px;
+     font-size: 10px;
+   
+}

@@ -1,0 +1,455 @@
+{% extends 'index.html' %} {% block content %}
+  <br />
+  <center>
+    <h1>LIBRO DE RECLAMACIONES EN SALUD VIRTUAL</h1>
+  </center>
+  <br />
+  {% if messages %}
+    <div class="alert alert-success d-flex align-items-center" role="alert">
+      {% for message in messages %}
+        {{ message }}
+      {% endfor %}
+    </div>
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <div class="container">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <div class="panel-title" style="margin-left: 20px">
+            <b>Regístra tu Reclamo - Hoja de Reclamación en Salud</b>
+          </div>
+        </div>
+        <div class="panel-body" style="margin: 8px">
+          <div class="form-row row" style="margin-left: 20px">
+            <div class="form-group col-md-6" style="margin-top: 24px">
+              <input type="text" class="form-control" disabled id="diris" placeholder="Dirección de Redes Integradas de Salud Lima Sur" />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputestablecimiento">Establecimiento de salud</label>
+              <select class="form-select" name="inputestablecimiento" class="form-control" required>
+                <option disabled selected value=""></option>
+
+                {% for c in entidad %}
+                  <option value="{{ c.0 }}">{{ c.1 }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="form-row row" style="margin-left: 20px">
+            <div class="form-group col-md-6" style="margin-top: 15px">
+              <label for="inputtiposervicio">Tipo de servicio prestado</label>
+              <select class="form-select" name="inputtiposervicio" class="form-control" required>
+                <option disabled selected value=""></option>
+                {% for key, value in tipo_servicio.items %}
+                  <option value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <div class="panel-title" style="margin-left: 20px">
+            <b>1. IDENTIFICACION DEL USUARIO O TERCERO LEGITIMADO</b>
+          </div>
+        </div>
+        <div class="panel-body" style="margin: 8px">
+          <div class="form-row row" style="margin-left: 20px">
+            <div class="form-group col-md-4">
+              <label for="inputtipodoc">Seleccione tipo de documento</label>
+              <select class="form-select" id="inputtipodocusuario" name="inputtipodocusuario" class="form-control" onchange="activar_nombre_usuario()" required>
+                <option disabled selected value=""></option>
+                {% for key, value in tipo_documento.items %}
+                  <option value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputdocumento">Número de documento</label>
+              <input type="number" class="form-control" id="inputdocumentousuario" placeholder="" name="inputdocumentousuario" />
+            </div>
+            <br />
+            <div class="form-group col-md-4" style="margin-top: 23px">
+              <button type="button" id="consultar1" class="btn btn-primary" onclick="obtenerDato()" disabled>Consultar</button>
+            </div>
+          </div>
+          <div class="form-row row" style="margin-left: 20px">
+            <div class="form-group col-md-4">
+              <label for="inputusuario">Nombre de usuario</label>
+              <input type="text" class="form-control" readOnly name="inputnombreusuario" id="inputnombreusuario" placeholder="" required disabled />
+            </div>
+
+            <div class="form-group col-md-4">
+              <label for="inputusuario">Apellido Paterno</label>
+              <input type="text" class="form-control" readOnly name="inputapellidopaterno" id="inputapellidopaterno" placeholder="" required disabled />
+            </div>
+
+            <div class="form-group col-md-4">
+              <label for="inputusuario">Apellido Materno</label>
+              <input type="text" class="form-control" readOnly name="inputapellidomaterno" id="inputapellidomaterno" placeholder="" required disabled />
+            </div>
+          </div>
+          <div class="form-row row" style="margin-left: 20px">
+            <div class="form-group col-md-6">
+              <label for="inputcorreo">Correo</label>
+              <input type="text" class="form-control" id="inputcorreousuario" placeholder="" name="inputcorreousuario" required />
+            </div>
+          </div>
+          <div class="form-row row" style="margin-left: 20px">
+            <div class="form-group col-md-4">
+              <label for="inputtelefono">Télefono</label>
+              <input type="number" min="1" pattern="^[0-9]+" class="form-control" id="inputtelefonousuario" placeholder="" name="inputtelefonousuario" required />
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputdistrito">Seleccione distrito</label>
+              <select class="form-select" name="inputdistritousuario" id="inputdistrito" class="form-control" required>
+                <option disabled selected value=""></option>
+                {% for key, value in distritos.items %}
+                  <option value="{{ value }}">{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="form-row row" style="margin-left: 20px">
+            <div class="form-group col-md-12">
+              <label for="inputdireccion">Dirección</label>
+              <input type="text" class="form-control" id="inputdireccionusuario" placeholder="" name="inputdireccionusuario" required />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <div class="panel-title" style="margin-left: 20px">
+            <b>2. IDENTIFICACION DE QUIEN PRESENTA EL RECLAMO (En caso de ser el usuario afectado no es necesario su llenado)</b>
+          </div>
+        </div>
+        <div class="panel-body" style="margin: 8px">
+          <div class="form-row row" style="margin-left: 20px">
+            <div class="form-group col-md-4">
+              <label for="inputtipodoc">Seleccione tipo de documento</label>
+              <select class="form-select" id="inputtipodocpresenta" name="inputtipodocpresenta" class="form-control" onchange="activar_nombre_usuario_2()">
+                <option disabled selected value=""></option>
+                {% for key, value in tipo_documento.items %}
+                  <option value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputdocumento">Número de documento</label>
+              <input type="number" class="form-control" id="inputdocumentopresenta" placeholder="" name="inputdocumentopresenta" disabled />
+            </div>
+            <br />
+            <div class="form-group col-md-4" style="margin-top: 23px">
+              <button type="button" id="consultar2" onclick="obtenerDato2()" class="btn btn-primary" disabled>Consultar</button>
+            </div>
+          </div>
+          <div class="form-row row" style="margin-left: 20px">
+            <div class="form-group col-md-4">
+              <label for="inputusuario">Nombre de usuario</label>
+              <input type="text" class="form-control" readonly name="inputusuario" id="inputusuario" placeholder="" disabled />
+            </div>
+
+            <div class="form-group col-md-4">
+              <label for="inputusuario">Apellido Paterno</label>
+              <input type="text" class="form-control" readOnly name="inputapellidopaterno_presenta" id="inputapellidopaterno_presenta" placeholder="" disabled />
+            </div>
+
+            <div class="form-group col-md-4">
+              <label for="inputusuario">Apellido Materno</label>
+              <input type="text" class="form-control" readOnly name="inputapellidomaterno_presenta" id="inputapellidomaterno_presenta" placeholder="" disabled />
+            </div>
+          </div>
+          <div class="form-row row" style="margin-left: 20px">
+            <div class="form-group col-md-6">
+              <label for="inputcorreo">Correo</label>
+              <input type="text" class="form-control" id="inputcorreopresenta" placeholder="" name="inputcorreopresenta" />
+            </div>
+          </div>
+
+          <div class="form-row row" style="margin-left: 20px">
+            <div class="form-group col-md-4">
+              <label for="inputtelefono">Télefono</label>
+              <input type="number" min="1" pattern="^[0-9]+" class="form-control" id="inputtelefonopresenta" placeholder="" name="inputtelefonopresenta" />
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputdistrito">Seleccione distrito</label>
+              <select class="form-select" name="inputdistritopresenta" id="inputdistrito" class="form-control">
+                <option disabled selected value=""></option>
+
+                {% for key, value in distritos.items %}
+                  <option value="{{ value }}">{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="form-row row" style="margin-left: 20px">
+            <div class="form-group col-md-12">
+              <label for="inputdireccion">Dirección</label>
+              <input type="text" rows="4" class="form-control" id="inputdireccionpresenta" placeholder="" name="inputdireccionpresenta" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <div class="panel-title" style="margin-left: 20px">
+            <b>3. DETALLE DEL RECLAMO</b>
+          </div>
+        </div>
+
+        <div class="panel-body" style="margin: 8px">
+          <div class="form-row" style="margin-left: 20px">
+            <div class="form-group col-md-12">
+              <textarea class="form-control" rows="5" id="detallereclamo" name="detallereclamo" required></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <div class="panel-title" style="margin-left: 20px">
+            <b>4. AUTORIZACIÓN DE NOTIFICACIÓN DEL RESULTADO DEL RECLAMO</b>
+          </div>
+        </div>
+
+        <div class="panel-body" style="margin: 8px">
+          <div class="form-row row" style="margin-left: 20px">
+            <div class="form-group col-md-7">
+              <select class="form-select" name="inputautoriza" class="form-control" required>
+                <option disabled selected value=""></option>
+
+                {% for key, value in autorizacion.items %}
+                  <option value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <!--                             <div class="form-check" style="margin-left:20px">
+            <input class="form-check-input" value="0" type="radio" name="input_no_autorizo"  checked />
+            <label class="form-check-label"  for="flexRadioDefault2">No autorizo que se me notifique el resultado del reclamo al email consignado</label>
+          </div>                             -->
+        </div>
+      </div>
+
+      <p id="piepagina1" align="center">
+        <b>Las IAFAS, IPRESS o UGIPRESS deben atender el reclamo en un plazo de 30 días hábiles.</b>
+      </p>
+      <p id="piepagina2" align="center">"Estimado Usuario: Usted puede presentar su denuncia ante SUSALUD ante hechos o actos que vulneren o pudieran vulnerar el derecho a la salud, o cuando no le hayan brindado un servicio, prestación o coberturas solicitadas o recibidas de las IAFAS O IPRESS o que dependen de las UGIPRESS pública, privada o mixtas, también ante la negativa de atención de su reclamo, irregularidad en su tramitación o disconformidad con el resultado del mismo o hacer uso de los mecanismos alternativos de solución de controversias ante el Centro de Conciliación y Arbitraje - CECONAR de SUSALUD".</p>
+      <br />
+      <div align="center">
+        <button type="submit" class="btn btn-primary btn-lg" style="margin-bottom: 45px">Registrar</button>
+      </div>
+    </div>
+  </form>
+
+  <script type="text/javascript">
+    function activar_nombre_usuario() {
+      var select = document.getElementById('inputtipodocusuario')
+      var boton = document.getElementById('consultar1')
+    
+      var valorSeleccionado = select.value
+    
+      if (valorSeleccionado == 1) {
+        document.getElementById('inputnombreusuario').readOnly = true
+        document.getElementById('inputapellidopaterno').readOnly = true
+        document.getElementById('inputapellidomaterno').readOnly = true
+        document.getElementById('consultar1').disabled = false
+      } else {
+        document.getElementById('inputnombreusuario').readOnly = false
+        document.getElementById('inputapellidopaterno').readOnly = false
+        document.getElementById('inputapellidomaterno').readOnly = false
+        document.getElementById('consultar1').disabled = true
+      }
+    }
+    
+    function activar_nombre_usuario_2() {
+      var select = document.getElementById('inputtipodocpresenta')
+      var valorSeleccionado = select.value
+      var boton = document.getElementById('consultar2')
+    
+      if (valorSeleccionado == 1) {
+        document.getElementById('inputusuario').readOnly = true
+        document.getElementById('inputapellidopaterno_presenta').readOnly = true
+        document.getElementById('inputapellidomaterno_presenta').readOnly = true
+        document.getElementById('consultar2').disabled = false
+      } else {
+        document.getElementById('inputusuario').readOnly = false
+        document.getElementById('inputapellidopaterno_presenta').readOnly = false
+        document.getElementById('inputapellidomaterno_presenta').readOnly = false
+        document.getElementById('consultar2').disabled = true
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function () {
+      const selectElement = document.getElementById('inputtipodocusuario')
+      const inputElement = document.getElementById('inputdocumentousuario')
+      const inputElement_nombre = document.getElementById('inputnombreusuario')
+      const inputElement_apellido_paterno = document.getElementById('inputapellidopaterno')
+      const inputElement_apellido_materno = document.getElementById('inputapellidomaterno')
+    
+      function toggleInput() {
+        if (selectElement.value == 1 || 2 || 3) {
+          // Cambia 'opcion2' por la opción que deseas
+          inputElement.removeAttribute('disabled')
+          inputElement_nombre.removeAttribute('disabled')
+          inputElement_apellido_paterno.removeAttribute('disabled')
+          inputElement_apellido_materno.removeAttribute('disabled')
+        } else {
+          inputElement.setAttribute('disabled', 'disabled')
+          inputElement_nombre.setAttribute('disabled', 'disabled')
+          inputElement_apellido_paterno.setAttribute('disabled', 'disabled')
+          inputElement_apellido_materno.setAttribute('disabled', 'disabled')
+        }
+      }
+    
+      // Inicialmente deshabilitar el input
+      inputElement.setAttribute('disabled', 'disabled')
+      inputElement_nombre.setAttribute('disabled', 'disabled')
+      inputElement_apellido_paterno.setAttribute('disabled', 'disabled')
+      inputElement_apellido_materno.setAttribute('disabled', 'disabled')
+    
+      // Agregar event listener para el cambio en el select
+      selectElement.addEventListener('change', toggleInput)
+    })
+    
+    document.addEventListener('DOMContentLoaded', function () {
+      const selectElement = document.getElementById('inputtipodocpresenta')
+      const inputElement = document.getElementById('inputdocumentopresenta')
+      const inputElement_nombre_presenta = document.getElementById('inputusuario')
+      const inputElement_apellidopaterno_presenta = document.getElementById('inputapellidopaterno_presenta')
+      const inputElement_apellidomaterno_presenta = document.getElementById('inputapellidomaterno_presenta')
+    
+      function toggleInput() {
+        if (selectElement.value == 1 || 2 || 3) {
+          // Cambia 'opcion2' por la opción que deseas
+          inputElement.removeAttribute('disabled')
+          inputElement_nombre_presenta.removeAttribute('disabled')
+          inputElement_apellidopaterno_presenta.removeAttribute('disabled')
+          inputElement_apellidomaterno_presenta.removeAttribute('disabled')
+        } else {
+          inputElement.setAttribute('disabled', 'disabled')
+          inputElement_nombre_presenta.setAttribute('disabled', 'disabled')
+          inputElement_apellidopaterno_presenta.setAttribute('disabled', 'disabled')
+          inputElement_apellidomaterno_presenta.setAttribute('disabled', 'disabled')
+        }
+      }
+    
+      // Inicialmente deshabilitar el input
+      inputElement.setAttribute('disabled', 'disabled')
+      inputElement_nombre_presenta.setAttribute('disabled', 'disabled')
+      inputElement_apellidopaterno_presenta.setAttribute('disabled', 'disabled')
+      inputElement_apellidomaterno_presenta.setAttribute('disabled', 'disabled')
+    
+      // Agregar event listener para el cambio en el select
+      selectElement.addEventListener('change', toggleInput)
+    })
+  </script>
+  <script>
+    function obtenerDato() {
+      // Obtener el valor del input user_id
+      var userId = document.getElementById('inputdocumentousuario').value
+    
+      // Crear un objeto FormData y añadir el user_id
+      var formData = new FormData()
+      formData.append('inputdocumentousuario', userId)
+    
+      // Realizar la solicitud a la API
+      fetch('/obtener-dato/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken') // Obtener el token CSRF
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Colocar el dato en el input result
+          document.getElementById('inputnombreusuario').value = data.dato
+          document.getElementById('inputapellidopaterno').value = data.dato2
+          document.getElementById('inputapellidomaterno').value = data.dato3
+        })
+        .catch((error) => {
+          console.error('Error al realizar la solicitud:', error)
+        })
+    }
+    
+    function obtenerDato2() {
+      // Obtener el valor del input user_id
+      var userId = document.getElementById('inputdocumentopresenta').value
+    
+      // Crear un objeto FormData y añadir el user_id
+      var formData = new FormData()
+      formData.append('inputdocumentopresenta', userId)
+    
+      // Realizar la solicitud a la API
+      fetch('/obtener-dato2/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken') // Obtener el token CSRF
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Colocar el dato en el input result
+          document.getElementById('inputusuario').value = data.dato
+          document.getElementById('inputapellidopaterno_presenta').value = data.dato2
+          document.getElementById('inputapellidomaterno_presenta').value = data.dato3
+        })
+        .catch((error) => {
+          console.error('Error al realizar la solicitud:', error)
+        })
+    }
+    
+    // Función para obtener el token CSRF de las cookies
+    function getCookie(name) {
+      let cookieValue = null
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';')
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim()
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === name + '=') {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1))
+            break
+          }
+        }
+      }
+      return cookieValue
+    }
+  </script>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">...</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function mostrar_modal() {
+      var select = document.getElementById('inputtipodocusuario')
+      var valorSeleccionado = select.value
+    
+      if (valorSeleccionado == 2) {
+        $('#myModal').modal('show')
+      }
+    }
+  </script>
+{% endblock %}
