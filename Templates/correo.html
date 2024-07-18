@@ -16,7 +16,13 @@
     <table border="1" style="border-collapse: collapse; width: 100%; height: 69px;">
       <tbody>
         <tr style="height: 63px;">
-          <td style="width: 64.8672%; height: 63px; text-align: center;">inserte nombre de la entidad aqui</td>
+          <td style="width: 64.8672%; height: 63px; text-align: center;">
+            {% for key, value in id_entidad.items %}
+                {%if entidad_id == 'key' %}
+                    {{value}}
+                {% endif %}
+              {% endfor %}
+          </td>
           <td style="width: 35.1328%; text-align: center; height: 69px;" rowspan="2">
             <b>HOJA DE RECLAMACION EN SALUD</b><br /><br />inserte codigo aqui
           </td>
@@ -34,7 +40,7 @@
     <table border="1" style="border-collapse: collapse; width: 100%;">
       <tbody>
         <tr>
-          <td style="width: 100%;">
+          <td style="width: 100%; background-color: lightblue; ">
             <div class="panel-heading">
               <div class="panel-title">
                 <b>1. IDENTIFICACIÓN DEL USUARIO O TERCERO LEGITIMADO</b>
@@ -47,34 +53,44 @@
     <table border="1" style="border-collapse: collapse; width: 100%; height: 72px;">
       <tbody>
         <tr style="height: 36px;">
-          <td style="width: 25%; height: 36px;">
+          <td style="width: 25%; height: 36px; background-color: lightgray;font-size: 14px;">
             <strong>NOMBRE O RAZÓN SOCIAL:</strong>
           </td>
-          <td style="width: 25%; height: 36px;">{{ nombres_usuario }} {{ apellido_paterno_usuario }} {{ apellido_materno_usuario }}</td>
-          <td style="width: 23.2301%; height: 36px;">
+          <td style="width: 25%; height: 36px;font-size: 14px;">{{ nombres_usuario }} {{ apellido_paterno_usuario }} {{ apellido_materno_usuario }}</td>
+          <td style="width: 23.2301%; height: 36px;background-color: lightgray;font-size: 14px;">
             <strong>EMAIL:</strong>
           </td>
-          <td style="width: 26.7699%; height: 36px;">{{ correo_usuario }}</td>
+          <td style="width: 26.7699%; height: 36px;font-size: 14px;">{{ correo_usuario }}</td>
         </tr>
         <tr style="height: 18px;">
-          <td style="width: 25%; height: 18px;">
+          <td style="width: 25%; height: 18px;background-color: lightgray;font-size: 14px;">
             <strong>DOMICILIO:</strong>
           </td>
-          <td style="width: 25%; height: 18px;">{{ direccion_usuario }}</td>
-          <td style="width: 23.2301%; height: 18px;">
+          <td style="width: 25%; height: 18px;font-size: 14px;">{{ direccion_usuario }}, {{distrito_usuario}}</td>
+          <td style="width: 23.2301%; height: 18px;background-color: lightgray;font-size: 14px;">
             <strong>TELÉFONO:</strong>
           </td>
-          <td style="width: 26.7699%; height: 18px;">{{ telefono_usuario }}</td>
+          <td style="width: 26.7699%; height: 18px;font-size: 14px;">{{ telefono_usuario }}</td>
         </tr>
         <tr style="height: 18px;">
-          <td style="width: 25%; height: 18px;">
+          <td style="width: 25%; height: 18px;background-color: lightgray;font-size: 14px;">
             <strong>DOCUMENTO DE IDENTIDAD:</strong>
           </td>
-          <td style="width: 25%; height: 18px;">{{ tipo_documento_usuario }}</td>
-          <td style="width: 23.2301%; height: 18px;">
+          <td style="width: 25%; height: 18px;font-size: 14px;">
+            {% if tipo_documento_usuario == '1' %}
+              DNI
+            {% elif tipo_documento_usuario == '2' %}
+              Carné de extranjería
+            {% elif tipo_documento_usuario == '3' %}
+              Pasaporte
+            {% else %}
+
+            {% endif %}
+          </td>
+          <td style="width: 23.2301%; height: 18px;background-color: lightgray;font-size: 14px;">
             <strong>NÚMERO DE DOCUMENTO:</strong>
           </td>
-          <td style="width: 26.7699%; height: 18px;">{{ numero_documento_usuario }}</td>
+          <td style="width: 26.7699%; height: 18px;font-size: 14px;">{{ numero_documento_usuario }}</td>
         </tr>
       </tbody>
     </table>
@@ -82,7 +98,7 @@
     <table border="1" style="border-collapse: collapse; width: 100%;">
       <tbody>
         <tr>
-          <td style="width: 100%;">
+          <td style="width: 100%; background-color: lightblue;">
             <div class="panel-heading">
               <div class="panel-title">
                 <b>2. IDENTIFICACION DE QUIEN PRESENTA EL RECLAMO (En caso de ser el usuario afectado no es necesario su llenado)</b>
@@ -95,34 +111,44 @@
     <table border="1" style="border-collapse: collapse; width: 100%; height: 72px;">
       <tbody>
         <tr style="height: 36px;">
-          <td style="width: 25%; height: 36px;">
+          <td style="width: 25%; height: 36px;background-color: lightgray;font-size: 14px;">
             <strong>NOMBRE O RAZÓN SOCIAL:</strong>
           </td>
-          <td style="width: 25%; height: 36px;">{{ nombres_presenta }} {{ apellido_paterno_presenta }} {{ apellido_materno_presenta }}</td>
-          <td style="width: 23.2301%; height: 36px;">
+          <td style="width: 25%; height: 36px;font-size: 14px;">{{ nombres_presenta }} {{ apellido_paterno_presenta }} {{ apellido_materno_presenta }}</td>
+          <td style="width: 23.2301%; height: 36px;background-color: lightgray;font-size: 14px;">
             <strong>EMAIL:</strong>
           </td>
-          <td style="width: 26.7699%; height: 36px;">{{ correo_presenta }}</td>
+          <td style="width: 26.7699%; height: 36px;font-size: 14px;">{{ correo_presenta }}</td>
         </tr>
         <tr style="height: 18px;">
-          <td style="width: 25%; height: 18px;">
+          <td style="width: 25%; height: 18px;background-color: lightgray;font-size: 14px;">
             <strong>DOMICILIO:</strong>
           </td>
-          <td style="width: 25%; height: 18px;">{{ domicilio_presenta }}</td>
-          <td style="width: 23.2301%; height: 18px;">
+          <td style="width: 25%; height: 18px;font-size: 14px;">{{ domicilio_presenta }}, {{distrito_presenta}}</td>
+          <td style="width: 23.2301%; height: 18px;background-color: lightgray;font-size: 14px;">
             <strong>TELÉFONO:</strong>
           </td>
-          <td style="width: 26.7699%; height: 18px;">{{ celular_presenta }}</td>
+          <td style="width: 26.7699%; height: 18px;font-size: 14px;">{{ celular_presenta }}</td>
         </tr>
         <tr style="height: 18px;">
-          <td style="width: 25%; height: 18px;">
+          <td style="width: 25%; height: 18px;background-color: lightgray;font-size: 14px;">
             <strong>DOCUMENTO DE IDENTIDAD:</strong>
           </td>
-          <td style="width: 25%; height: 18px;">{{ tipo_documento_presenta }}</td>
-          <td style="width: 23.2301%; height: 18px;">
+          <td style="width: 25%; height: 18px;font-size: 14px;">
+            {% if numero_documento_presenta == '1' %}
+              DNI
+            {% elif numero_documento_presenta == '2' %}
+              Carné de extranjería
+            {% elif numero_documento_presenta == '3' %}
+              Pasaporte
+            {% else %}
+
+            {% endif %}
+          </td>
+          <td style="width: 23.2301%; height: 18px;background-color: lightgray; font-size: 14px;">
             <strong>NÚMERO DE DOCUMENTO:</strong>
           </td>
-          <td style="width: 26.7699%; height: 18px;">{{ numero_documento_presenta }}</td>
+          <td style="width: 26.7699%; height: 18px;font-size: 14px;">{{ numero_documento_presenta }}</td>
         </tr>
       </tbody>
     </table>
@@ -130,12 +156,12 @@
     <table border="1" style="border-collapse: collapse; width: 100%; height: 36px;">
       <tbody>
         <tr style="height: 18px;">
-          <td style="width: 100%; height: 18px;">
+          <td style="width: 100%; height: 18px;background-color: lightblue;">
             <b>3. DETALLE DEL RECLAMO</b>
           </td>
         </tr>
         <tr style="height: 18px;">
-          <td style="width: 100%; height: 45px;">{{ detalle_reclamo }}</td>
+          <td style="width: 100%; height: 45px;font-size: 14px;">{{ detalle_reclamo }}</td>
         </tr>
       </tbody>
     </table>
@@ -143,20 +169,28 @@
     <table border="1" style="border-collapse: collapse; width: 100%; height: 36px;">
       <tbody>
         <tr style="height: 18px;">
-          <td style="width: 100%; height: 18px;">
+          <td style="width: 100%; height: 18px; background-color: lightblue;">
             <b>4. AUTORIZACIÓN DE NOTIFICACIÓN DEL RESULTADO DEL RECLAMO</b>
           </td>
         </tr>
         <tr style="height: 18px;">
-          <td style="width: 100%; height: 18px;">{{ autorizacion_notificacion_correo }}</td>
+          <td style="width: 100%; height: 18px;font-size: 14px;">
+            {% if autorizacion_notificacion_correo == '0' %}
+              Sí autorizo que se me notifique el resultado del reclamo al email consignado
+            {% elif autorizacion_notificacion_correo == '1' %}
+              No autorizo que se me notifique el resultado del reclamo al email consignado
+            {% else %}
+              null
+            {% endif %}
+          </td>
         </tr>
       </tbody>
     </table>
     <footer>
-      <p id="piepagina1" align="center">
+      <p id="piepagina1" align="center" style="font-size: 10px;">
         <b>Las IAFAS, IPRESS o UGIPRESS deben atender el reclamo en un plazo de 30 días hábiles.</b>
       </p>
-      <p id="piepagina2" align="center">"Estimado Usuario: Usted puede presentar su denuncia ante SUSALUD ante hechos o actos que vulneren o pudieran vulnerar el derecho a la salud, o cuando no le hayan brindado un servicio, prestación o coberturas solicitadas o recibidas de las IAFAS O IPRESS o que dependen de las UGIPRESS pública, privada o mixtas, también ante la negativa de atención de su reclamo, irregularidad en su tramitación o disconformidad con el resultado del mismo o hacer uso de los mecanismos alternativos de solución de controversias ante el Centro de Conciliación y Arbitraje - CECONAR de SUSALUD".</p>
+      <p id="piepagina2" align="center" style="font-size: 10px;">"Estimado Usuario: Usted puede presentar su denuncia ante SUSALUD ante hechos o actos que vulneren o pudieran vulnerar el derecho a la salud, o cuando no le hayan brindado un servicio, prestación o coberturas solicitadas o recibidas de las IAFAS O IPRESS o que dependen de las UGIPRESS pública, privada o mixtas, también ante la negativa de atención de su reclamo, irregularidad en su tramitación o disconformidad con el resultado del mismo o hacer uso de los mecanismos alternativos de solución de controversias ante el Centro de Conciliación y Arbitraje - CECONAR de SUSALUD".</p>
     </footer>
 
     <script>

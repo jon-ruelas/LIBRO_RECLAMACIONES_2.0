@@ -9,7 +9,7 @@ from django.template.loader import get_template
 
 
 from Models.reclamo.models import Entidadreclamo
-from Views.SetupView import generate_pdf_and_send_email,  listar_autorizacion_correo, listar_distritos, listar_entidades, listar_tipo_documento, listar_tipo_servicio
+from Views.SetupView import generate_pdf_and_send_email,  listar_autorizacion_correo, listar_distritos, listar_entidad_por_id, listar_entidades, listar_tipo_documento, listar_tipo_servicio
 
 
 class HomeView():
@@ -114,7 +114,6 @@ class HomeView():
 
             ).save()
 
-            """send_email(correo_usuario)"""
             generate_pdf_and_send_email(request)
 
             messages.success(
