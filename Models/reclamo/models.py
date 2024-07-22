@@ -24,7 +24,7 @@ class Entidadreclamo (models.Model):
     nombres_presenta = models.CharField(max_length=100)
     apellido_paterno_presenta = models.CharField(max_length=100)
     apellido_materno_presenta = models.CharField(max_length=100)
-    correo_presenta= models.CharField(max_length=100)
+    correo_presenta = models.CharField(max_length=100)
     celular_presenta = models.CharField(max_length=100)
     distrito_presenta = models.CharField(
         max_length=100)  # CREAR CAMPO EN BASE DE DATOS
@@ -35,6 +35,8 @@ class Entidadreclamo (models.Model):
     autorizacion_notificacion_correo = models.CharField(max_length=100)
 
     fecha_reclamo = models.DateTimeField(auto_now_add=True)
+
+    codigo_registro = models.CharField(max_length=100, blank=True)
 
     class Meta:
         db_table = 'reclamo_entidadreclamo_prueba'

@@ -37,8 +37,6 @@ class HomeView():
             'autorizacion': listar_autorizacion_correo(),
             'distritos': listar_distritos(),
 
-
-
         }
 
         if (request.method == 'POST'):
@@ -111,6 +109,7 @@ class HomeView():
                 detalle_reclamo=detalle_reclamo,
 
                 autorizacion_notificacion_correo=autorizacion_notificacion_correo,
+
 
             ).save()
 

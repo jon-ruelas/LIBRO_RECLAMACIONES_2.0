@@ -7,7 +7,6 @@ from django.conf import settings
 from django.template.loader import get_template
 
 from django.core.mail import EmailMultiAlternatives
-
 from Models.reclamo.models import Entidadreclamo
 from newformulario import settings
 from django.template.loader import render_to_string
@@ -531,6 +530,7 @@ def generate_pdf_and_send_email(request):
 
     if request.method == 'POST':
         # Obtener los datos del formulario
+
         entidad_id = request.POST.get("inputestablecimiento")
         nombres_usuario = request.POST.get('inputnombreusuario')
         apellido_paterno_usuario = request.POST.get('inputapellidopaterno')
@@ -589,7 +589,6 @@ def generate_pdf_and_send_email(request):
             'celular_presenta': celular_presenta,
             'detalle_reclamo': detalle_reclamo,
             'autorizacion_notificacion_correo': autorizacion_notificacion_correo,
-
 
 
 
