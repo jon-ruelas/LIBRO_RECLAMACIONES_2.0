@@ -1,3 +1,4 @@
+import base64
 from email.message import EmailMessage
 import os
 from django.db import connection
@@ -613,5 +614,21 @@ def generate_pdf_and_send_email(request):
         email.send()
 
         return HttpResponse('El PDF fue generado y enviado correctamente por correo.')
+
+    return render(request, 'formulario.html')
+
+
+def imagen_base64(request):
+    # Ruta al archivo de imagen en tu proyecto
+    imagen_path = settings.MEDIA_ROOT + \
+        'C:/Users/DIRISLS/Desktop/Trabajo Ruelas/RECLAMACIONES/Formulario_new/newformulario/static/imagenes/dirislimasurlogo.jpg'
+
+    # Leer la imagen y convertirla a base64
+    with open(imagen_path, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+
+    context = {
+        'imagen_base64': encoded_string
+    }
 
     return render(request, 'formulario.html')

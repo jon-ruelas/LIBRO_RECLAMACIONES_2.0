@@ -3,8 +3,11 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Formulario HTML a PDF</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hoja de reclamo</title>
     <style>
+
       body {
         font-family: Arial, sans-serif;
         /* Cambiar la fuente a Arial o una fuente sans-serif */
@@ -12,6 +15,9 @@
     </style>
   </head>
   <body>
+
+    <img contenttype="image/jpg"  src="data:image/jpg;base64,{{ imagen_base64 }}" height="70px" width ="220px" alt="Mi Imagen">
+
     {% csrf_token %}
     <table border="1" style="border-collapse: collapse; width: 100%; height: 69px;">
       <tbody>
@@ -380,7 +386,7 @@
           <td style="width: 25%; height: 36px;background-color: lightgray;font-size: 14px;">
             <strong>NOMBRE O RAZÓN SOCIAL:</strong>
           </td>
-          <td style="width: 25%; height: 36px;font-size: 14px;">{{ nombres_presenta }} {{ apellido_paterno_presenta }} {{ apellido_materno_presenta }}</td>
+          <td style="width: 25%; height: 36px;font-size: 14px;">{{ nombres_presenta|default_if_none:"" }} {{ apellido_paterno_presenta|default_if_none:"" }} {{ apellido_materno_presenta|default_if_none:""}}</td>
           <td style="width: 23.2301%; height: 36px;background-color: lightgray;font-size: 14px;">
             <strong>EMAIL:</strong>
           </td>
@@ -390,7 +396,7 @@
           <td style="width: 25%; height: 18px;background-color: lightgray;font-size: 14px;">
             <strong>DOMICILIO:</strong>
           </td>
-          <td style="width: 25%; height: 18px;font-size: 14px;">{{ domicilio_presenta }}, {{ distrito_presenta }}</td>
+          <td style="width: 25%; height: 18px;font-size: 14px;">{{ domicilio_presenta }}, {{ distrito_presenta|default_if_none:"" }}</td>
           <td style="width: 23.2301%; height: 18px;background-color: lightgray;font-size: 14px;">
             <strong>TELÉFONO:</strong>
           </td>
@@ -414,7 +420,7 @@
           <td style="width: 23.2301%; height: 18px;background-color: lightgray; font-size: 14px;">
             <strong>NÚMERO DE DOCUMENTO:</strong>
           </td>
-          <td style="width: 26.7699%; height: 18px;font-size: 14px;">{{ numero_documento_presenta }}</td>
+          <td style="width: 26.7699%; height: 18px;font-size: 14px;">{{ numero_documento_presenta|default_if_none:"" }}</td>
         </tr>
       </tbody>
     </table>
