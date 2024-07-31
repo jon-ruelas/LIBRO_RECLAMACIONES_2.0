@@ -1,6 +1,8 @@
 import base64
 from email.message import EmailMessage
+from io import BytesIO
 import os
+import tempfile
 from django.db import connection
 from django.http import JsonResponse
 import requests
@@ -11,6 +13,7 @@ from django.core.mail import EmailMultiAlternatives
 from Models.reclamo.models import Entidadreclamo
 from newformulario import settings
 from django.template.loader import render_to_string
+from django.core.files.base import ContentFile
 
 
 from django.shortcuts import get_object_or_404, render, redirect
@@ -526,7 +529,7 @@ def generate_pdf_and_send_email(request):
     return render(request, 'formulario.html')
 """
 
-
+"""
 def generate_pdf_and_send_email(request):
 
     if request.method == 'POST':
@@ -602,7 +605,38 @@ def generate_pdf_and_send_email(request):
             'page-size': 'Letter',
             'encoding': 'UTF-8',
         }
-        pdf = pdfkit.from_string(html_template, False, options=options)
+        pdf_buffer = BytesIO()
+
+        pdfkit.from_string(html_template, pdf_buffer, options=options)
+
+        pdf_buffer.seek(0)
+        # Crear una instancia del modelo y guardar el PDF
+        reclamo = Entidadreclamo(
+            entidad_id=entidad_id,
+            nombres_usuario=nombres_usuario,
+            apellido_paterno_usuario=apellido_paterno_usuario,
+            apellido_materno_usuario=apellido_materno_usuario,
+            correo_usuario=correo_usuario,
+            direccion_usuario=direccion_usuario,
+            distrito_usuario=distrito_usuario,
+            tipo_documento_usuario=tipo_documento_usuario,
+            numero_documento_usuario=numero_documento_usuario,
+            telefono_usuario=telefono_usuario,
+            tipo_documento_presenta=tipo_documento_presenta,
+            numero_documento_presenta=numero_documento_presenta,
+            nombres_presenta=nombres_presenta,
+            apellido_paterno_presenta=apellido_paterno_presenta,
+            apellido_materno_presenta=apellido_materno_presenta,
+            correo_presenta=correo_presenta,
+            celular_presenta=celular_presenta,
+            distrito_presenta=distrito_presenta,
+            domicilio_presenta=domicilio_presenta,
+            detalle_reclamo=detalle_reclamo,
+            autorizacion_notificacion_correo=autorizacion_notificacion_correo,
+        )
+        reclamo.expediente.save(
+            'formulario.pdf', ContentFile(pdf_buffer.getvalue()), save=False)
+        reclamo.save()
 
         # Enviar el PDF por correo electrónico
         email_subject = 'Su reclamo fue ingresado'
@@ -610,18 +644,133 @@ def generate_pdf_and_send_email(request):
 
         email = EmailMessage(email_subject, email_body,
                              'settings.EMAIL_HOST_USER', [correo_usuario])
-        email.attach('formulario.pdf', pdf, 'application/pdf')
+        email.attach('formulario.pdf', pdf_buffer.getvalue(),
+                     'application/pdf')
         email.send()
 
         return HttpResponse('El PDF fue generado y enviado correctamente por correo.')
+
+    return render(request, 'formulario.html')
+"""
+
+
+def generate_pdf_and_send_email(request):
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        entidad_id = request.POST.get("inputestablecimiento")
+        servicio_hecho_reclamo = request.POST.get("inputtiposervicio")
+
+        nombres_usuario = request.POST.get('inputnombreusuario')
+        apellido_paterno_usuario = request.POST.get('inputapellidopaterno')
+        apellido_materno_usuario = request.POST.get('inputapellidomaterno')
+        correo_usuario = request.POST.get("inputcorreousuario")
+        direccion_usuario = request.POST.get('inputdireccionusuario')
+        distrito_usuario = request.POST.get('inputdistritousuario')
+        tipo_documento_usuario = request.POST.get("inputtipodocusuario")
+        numero_documento_usuario = request.POST.get("inputdocumentousuario")
+        telefono_usuario = request.POST.get("inputtelefonousuario")
+
+        tipo_documento_presenta = request.POST.get("inputtipodocpresenta")
+        numero_documento_presenta = request.POST.get("inputdocumentopresenta")
+        nombres_presenta = request.POST.get("inputusuario")
+        apellido_paterno_presenta = request.POST.get(
+            "inputapellidopaterno_presenta")
+        apellido_materno_presenta = request.POST.get(
+            "inputapellidomaterno_presenta")
+        correo_presenta = request.POST.get("inputcorreopresenta")
+        celular_presenta = request.POST.get("inputtelefonopresenta")
+        distrito_presenta = request.POST.get("inputdistritopresenta")
+        domicilio_presenta = request.POST.get("inputdireccionpresenta")
+
+        detalle_reclamo = request.POST.get("detallereclamo")
+        autorizacion_notificacion_correo = request.POST.get("inputautoriza")
+
+        # Renderizar la plantilla HTML con los datos del formulario
+        context = {
+            'entidad': listar_entidades(),
+            'id_entidad': listar_entidad_por_id(),
+            'entidad_id': entidad_id,
+            'nombres_usuario': nombres_usuario,
+            'apellido_paterno_usuario': apellido_paterno_usuario,
+            'apellido_materno_usuario': apellido_materno_usuario,
+            'direccion_usuario': direccion_usuario,
+            'distrito_usuario': distrito_usuario,
+            'correo_usuario': correo_usuario,
+            'tipo_documento_usuario': tipo_documento_usuario,
+            'numero_documento_usuario': numero_documento_usuario,
+            'telefono_usuario': telefono_usuario,
+            'nombres_presenta': nombres_presenta,
+            'apellido_paterno_presenta': apellido_paterno_presenta,
+            'apellido_materno_presenta': apellido_materno_presenta,
+            'domicilio_presenta': domicilio_presenta,
+            'distrito_presenta': distrito_presenta,
+            'correo_presenta': correo_presenta,
+            'tipo_documento_presenta': tipo_documento_presenta,
+            'numero_documento_presenta': numero_documento_presenta,
+            'celular_presenta': celular_presenta,
+            'detalle_reclamo': detalle_reclamo,
+            'autorizacion_notificacion_correo': autorizacion_notificacion_correo,
+        }
+        html_template = render_to_string('correo.html', context)
+
+        # Convertir la plantilla HTML a PDF
+        options = {
+            'page-size': 'Letter',
+            'encoding': 'UTF-8',
+        }
+        pdf_content = pdfkit.from_string(html_template, False, options=options)
+
+        # Guardar el PDF en la base de datos
+
+        reclamo = Entidadreclamo(
+            entidad_id=entidad_id,
+            servicio_hecho_reclamo=servicio_hecho_reclamo,
+
+            tipo_documento_usuario=tipo_documento_usuario,
+            numero_documento_usuario=numero_documento_usuario,
+            nombres_usuario=nombres_usuario,
+            apellido_paterno_usuario=apellido_paterno_usuario,
+            apellido_materno_usuario=apellido_materno_usuario,
+
+            correo_usuario=correo_usuario,  # CREAR CAMPO EN BASE DE DATOS
+            telefono_usuario=telefono_usuario,  # CREAR CAMPO EN BASE DE DATOS
+            distrito_usuario=distrito_usuario,  # CREAR CAMPO EN BASE DE DATOS
+            direccion_usuario=direccion_usuario,  # CREAR CAMPO EN BASE DE DATOS
+
+            tipo_documento_presenta=tipo_documento_presenta,
+            numero_documento_presenta=numero_documento_presenta,
+            nombres_presenta=nombres_presenta,
+            apellido_paterno_presenta=apellido_paterno_presenta,
+            apellido_materno_presenta=apellido_materno_presenta,
+            correo_presenta=correo_presenta,
+            celular_presenta=celular_presenta,
+            distrito_presenta=distrito_presenta,  # CREAR CAMPO EN BASE DE DATOS
+            domicilio_presenta=domicilio_presenta,
+
+            detalle_reclamo=detalle_reclamo,
+
+            autorizacion_notificacion_correo=autorizacion_notificacion_correo,
+        )
+        reclamo.expediente.save(
+            'formulario.pdf', ContentFile(pdf_content))
+
+        # Enviar el PDF por correo electrónico
+        email_subject = 'Su reclamo fue ingresado'
+        email_body = 'Se adjunto archivo pdf con el detalle de su reclamo a continuación:'
+
+        email = EmailMessage(email_subject, email_body,
+                             'settings.EMAIL_HOST_USER', [correo_usuario])
+        email.attach('formulario.pdf', pdf_content, 'application/pdf')
+        email.send()
+
+        return HttpResponse('El PDF fue generado y guardado correctamente en la base de datos.')
 
     return render(request, 'formulario.html')
 
 
 def imagen_base64(request):
     # Ruta al archivo de imagen en tu proyecto
-    imagen_path = settings.MEDIA_ROOT + \
-        'C:/Users/DIRISLS/Desktop/Trabajo Ruelas/RECLAMACIONES/Formulario_new/newformulario/static/imagenes/dirislimasurlogo.jpg'
+    imagen_path = os.path.join(settings.MEDIA_ROOT, 'dirislimasurlogo.jpg')
 
     # Leer la imagen y convertirla a base64
     with open(imagen_path, "rb") as image_file:
@@ -631,4 +780,4 @@ def imagen_base64(request):
         'imagen_base64': encoded_string
     }
 
-    return render(request, 'formulario.html')
+    return render(request, 'correo.html', context)

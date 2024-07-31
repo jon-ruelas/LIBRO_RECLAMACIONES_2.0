@@ -17,6 +17,10 @@ from django.contrib import admin
 from django.urls import path
 from Views.HomeView import HomeView
 from Views.SetupView import obtener_dato, obtener_dato2
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -27,6 +31,7 @@ urlpatterns = [
     path('obtener-dato/', obtener_dato, name='obtener_dato'),
     path('obtener-dato2/', obtener_dato2, name='obtener_dato2'),
     path('registrar/', HomeView.registroReclamo, name='registar'),
+    path('admin/', admin.site.urls),
 
 
 
@@ -34,3 +39,6 @@ urlpatterns = [
 
 
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

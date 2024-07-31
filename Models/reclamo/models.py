@@ -36,7 +36,10 @@ class Entidadreclamo (models.Model):
 
     fecha_reclamo = models.DateTimeField(auto_now_add=True)
 
-    codigo_registro = models.CharField(max_length=100, blank=True)
+    # codigo_registro = models.CharField(max_length=100, blank=True)
+
+    expediente = models.FileField(
+        upload_to='pdfs/', blank=True, null=True)
 
     class Meta:
         db_table = 'reclamo_entidadreclamo_prueba'

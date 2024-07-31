@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Models.reclamo',
     'Models.setup',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -111,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-PE'
 
 TIME_ZONE = 'UTC'
 
@@ -144,3 +145,10 @@ EMAIL_HOST_PASSWORD = "lewgarovclnhkjbv"
 
 
 WKHTMLTOPDF_CMD = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+
+
+# Ruta a la carpeta fuera del proyecto
+MEDIA_ROOT = 'C:/Users/DIRISLS/Desktop/Trabajo Ruelas/RECLAMACIONES/media'
+
+# URL para acceder a los archivos de medios
+MEDIA_URL = '/media/'

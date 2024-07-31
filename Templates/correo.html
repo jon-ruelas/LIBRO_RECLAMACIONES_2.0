@@ -16,7 +16,7 @@
   </head>
   <body>
 
-    <img contenttype="image/jpg"  src="data:image/jpg;base64,{{ imagen_base64 }}" height="70px" width ="220px" alt="Mi Imagen">
+    <img contenttype="image/jpg"  src="data:image/jpeg;base64,{{ imagen_base64 }}" height="70px" width ="220px" alt="Mi Imagen">
 
     {% csrf_token %}
     <table border="1" style="border-collapse: collapse; width: 100%; height: 69px;">
@@ -296,7 +296,8 @@
             {% endif %}<br />inserte dirección aqui
           </td>
           <td style="width: 35.1328%; text-align: center; height: 69px;" rowspan="2">
-            <b>HOJA DE RECLAMACION EN SALUD</b><br /><br />{{codigo_registro}}
+            <b>HOJA DE RECLAMACION EN SALUD</b><br /><br />  
+ 
           </td>
         </tr>
         <tr style="height: 6px;">

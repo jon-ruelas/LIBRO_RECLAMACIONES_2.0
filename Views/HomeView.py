@@ -1,12 +1,15 @@
 from email import message
+import os
 from pyexpat.errors import messages
 from django.contrib import messages
+from django.core.files.base import ContentFile
 
 from django.db import connection
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import get_template
 
+from django.core.mail import EmailMessage
 
 from Models.reclamo.models import Entidadreclamo
 from Views.SetupView import generate_pdf_and_send_email,  listar_autorizacion_correo, listar_distritos, listar_entidad_por_id, listar_entidades, listar_tipo_documento, listar_tipo_servicio
@@ -30,6 +33,8 @@ class HomeView():
         return HttpResponse(plantilla.render())
 
     def registroReclamo(request):
+
+        generate_pdf_and_send_email(request)
         data = {
             'entidad': listar_entidades(),
             'tipo_documento': listar_tipo_documento(),
@@ -110,10 +115,7 @@ class HomeView():
 
                 autorizacion_notificacion_correo=autorizacion_notificacion_correo,
 
-
-            ).save()
-
-            generate_pdf_and_send_email(request)
+            )
 
             messages.success(
                 request, 'Se registró el reclamo correctamente.')
