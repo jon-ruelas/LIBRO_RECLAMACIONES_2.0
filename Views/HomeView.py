@@ -43,7 +43,6 @@ class HomeView():
             'distritos': listar_distritos(),
 
         }
-
         if (request.method == 'POST'):
             entidad_id = request.POST.get("inputestablecimiento")
             servicio_hecho_reclamo = request.POST.get("inputtiposervicio")

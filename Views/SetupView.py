@@ -655,6 +655,7 @@ def generate_pdf_and_send_email(request):
 
 
 def generate_pdf_and_send_email(request):
+
     if request.method == 'POST':
         # Obtener los datos del formulario
         entidad_id = request.POST.get("inputestablecimiento")

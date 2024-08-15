@@ -15,8 +15,15 @@
     </style>
   </head>
   <body>
-
-    <img contenttype="image/jpg"  src="data:image/jpeg;base64,{{ imagen_base64 }}" height="70px" width ="220px" alt="Mi Imagen">
+    
+     <img src="https://www.dirislimasur.gob.pe/wp-content/uploads/2019/11/cropped-Logo-DIRIS-Viceministerio-png.png"   alt="Mi Imagen" align="left">
+ 
+     <img src="https://cefra.com.pe/complaints_book/static/src/img/logo-susalud.png"  width="190" height="52" alt="Mi Imagen" align="right">
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
 
     {% csrf_token %}
     <table border="1" style="border-collapse: collapse; width: 100%; height: 69px;">
@@ -295,9 +302,9 @@
               CSMC SAN PEDRO DE LURIN
             {% endif %}<br />inserte dirección aqui
           </td>
-          <td style="width: 35.1328%; text-align: center; height: 69px;" rowspan="2">
+          <td style="width: 35.1328%; text-align: center; height: 69px;font-size: 20px" rowspan="2" >
             <b>HOJA DE RECLAMACION EN SALUD</b><br /><br />  
- 
+            {{codigo_registro}}
           </td>
         </tr>
         <tr style="height: 6px;">
@@ -468,20 +475,30 @@
 
     <script>
       // Obtener el elemento donde mostraremos la fecha y hora
-      var fechaHoraElemento = document.getElementById('fecha-hora')
-      
+      var fechaHoraElemento = document.getElementById('fecha-hora');
+
       // Función para obtener la fecha y hora actual
       function obtenerFechaHoraActual() {
-        var fechaHora = new Date()
-        //var opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric'  };
-        fechaHoraElemento.textContent = fechaHora.toLocaleString('es')
+          var fechaHora = new Date();
+          var opciones = { 
+              weekday: 'long', 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric', 
+              hour: 'numeric', 
+              minute: 'numeric', 
+              second: 'numeric' // Asegúrate de incluir los segundos si quieres una actualización completa
+              
+          };
+          fechaHoraElemento.textContent = fechaHora.toLocaleString('es-ES', opciones);
       }
-      
+
       // Llamar a la función al cargar la página
-      obtenerFechaHoraActual()
-      
-      // Actualizar la fecha y hora cada segundo (opcional)
-      setInterval(obtenerFechaHoraActual, 1000)
+      obtenerFechaHoraActual();
+
+      // Actualizar la fecha y hora cada segundo
+      setInterval(obtenerFechaHoraActual, 1000);
+       
     </script>
   </body>
 </html>
