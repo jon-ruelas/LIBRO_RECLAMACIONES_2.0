@@ -11,6 +11,7 @@ from django.template.loader import get_template
 
 from django.core.mail import EmailMultiAlternatives
 from Models.reclamo.models import Entidadreclamo
+from Models.setup.models import Entidad
 from newformulario import settings
 from django.template.loader import render_to_string
 from django.core.files.base import ContentFile
@@ -36,6 +37,26 @@ def listar_entidades():
         lista.append(fila)
 
     return lista
+
+
+def devuelve_codigo_reclamo(entidad_id):
+
+    with connection.cursor() as cursor:
+        cursor.callproc('devuelve_codigo_reclamo', [entidad_id])
+
+        result = cursor.fetchall()
+    return result
+
+
+def llamar_devuelve_codigo_reclamo(request, entidad_id):
+    # Llamar al procedimiento almacenado
+    resultado = devuelve_codigo_reclamo(entidad_id)
+
+    context = {
+        'resultado': resultado,
+
+    }
+    return render(request, 'correo.html', context)
 
 
 def listar_tipo_documento():
@@ -686,11 +707,14 @@ def generate_pdf_and_send_email(request):
         detalle_reclamo = request.POST.get("detallereclamo")
         autorizacion_notificacion_correo = request.POST.get("inputautoriza")
 
+        codigo = Entidad.objects.all()
+
         # Renderizar la plantilla HTML con los datos del formulario
         context = {
             'entidad': listar_entidades(),
             'id_entidad': listar_entidad_por_id(),
             'entidad_id': entidad_id,
+
             'nombres_usuario': nombres_usuario,
             'apellido_paterno_usuario': apellido_paterno_usuario,
             'apellido_materno_usuario': apellido_materno_usuario,
@@ -711,6 +735,7 @@ def generate_pdf_and_send_email(request):
             'celular_presenta': celular_presenta,
             'detalle_reclamo': detalle_reclamo,
             'autorizacion_notificacion_correo': autorizacion_notificacion_correo,
+            'codigo': codigo,
         }
         html_template = render_to_string('correo.html', context)
 
@@ -767,18 +792,3 @@ def generate_pdf_and_send_email(request):
         return HttpResponse('El PDF fue generado y guardado correctamente en la base de datos.')
 
     return render(request, 'formulario.html')
-
-
-def imagen_base64(request):
-    # Ruta al archivo de imagen en tu proyecto
-    imagen_path = os.path.join(settings.MEDIA_ROOT, 'dirislimasurlogo.jpg')
-
-    # Leer la imagen y convertirla a base64
-    with open(imagen_path, "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
-
-    context = {
-        'imagen_base64': encoded_string
-    }
-
-    return render(request, 'correo.html', context)
